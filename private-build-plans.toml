@@ -12,6 +12,16 @@ no-ligation = true
   ampersand = "closed"
   at = "fourfold"
   y = "curly-turn"
+  w = "straight"
+  capital-q = "curly-tailed"
+  zero = "slashed-oval"
+  two = "straight-neck"
+  three = "two-arcs"
+  five = "oblique-upper-left-bar"
+  six = "open-contour"
+  eight = "crossing"
+  nine = "open-contour"
+  dollar = "through"
 
 [buildPlans.iosevka-julsh.slopes.upright]
 angle = 0
@@ -39,6 +49,16 @@ no-ligation = true
   ampersand = "closed"
   at = "fourfold"
   y = "curly-turn"
+  w = "straight"
+  capital-q = "curly-tailed"
+  zero = "slashed-oval"
+  two = "straight-neck"
+  three = "two-arcs"
+  five = "oblique-upper-left-bar"
+  six = "open-contour"
+  eight = "crossing"
+  nine = "open-contour"
+  dollar = "through"
 
 [buildPlans.iosevka-julsh-mono.slopes.upright]
 angle = 0
