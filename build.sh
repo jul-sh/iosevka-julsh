@@ -6,4 +6,6 @@ cd Iosevka-master
 npm ci
 npm run build -- ttf-unhinted::iosevka-julsh
 npm run build -- ttf-unhinted::iosevka-julsh-mono
+npm run build -- ttf-unhinted::iosevka-julsh-curly
+npm run build -- ttf-unhinted::iosevka-julsh-curly-mono
 cd ../
