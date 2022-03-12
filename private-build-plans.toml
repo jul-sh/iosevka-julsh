@@ -11,6 +11,7 @@ no-ligation = true
   [buildPlans.iosevka-julsh.variants.design]
   ampersand = "closed"
   at = "fourfold"
+  y = "curly-turn"
 
 [buildPlans.iosevka-julsh.slopes.upright]
 angle = 0
@@ -37,6 +38,7 @@ no-ligation = true
   [buildPlans.iosevka-julsh-mono.variants.design]
   ampersand = "closed"
   at = "fourfold"
+  y = "curly-turn"
 
 [buildPlans.iosevka-julsh-mono.slopes.upright]
 angle = 0
