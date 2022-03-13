@@ -9,11 +9,12 @@ no-ligation = true
   inherits = "ss08"
 
   [buildPlans.iosevka-julsh.variants.design]
+  capital-q = "crossing"
   ampersand = "closed"
   at = "fourfold"
-  y = "curly-turn"
+  e = "rounded"
   w = "straight"
-  capital-q = "curly-tailed"
+  y = "curly-turn"
   zero = "slashed-oval"
   two = "straight-neck"
   three = "two-arcs"
@@ -46,11 +47,12 @@ no-ligation = true
   inherits = "ss08"
 
   [buildPlans.iosevka-julsh-mono.variants.design]
+  capital-q = "crossing"
   ampersand = "closed"
   at = "fourfold"
-  y = "curly-turn"
+  e = "rounded"
   w = "straight"
-  capital-q = "curly-tailed"
+  y = "curly-turn"
   zero = "slashed-oval"
   two = "straight-neck"
   three = "two-arcs"
@@ -83,6 +85,7 @@ no-ligation = true
   inherits = "ss08"
 
   [buildPlans.iosevka-julsh-curly.variants.design]
+  capital-q = "crossing"
   ampersand = "closed"
   at = "fourfold"
   zero = "slashed-oval"
@@ -103,7 +106,6 @@ no-ligation = true
   h = "straight"
   i = "tailed-serifed"
   j = "serifed"
-  k = "symmetric-connected-bottom-right-serifed"
   l = "tailed-serifed"
   m = "normal"
   n = "straight"
@@ -152,6 +154,7 @@ no-ligation = true
   inherits = "ss08"
 
   [buildPlans.iosevka-julsh-curly-mono.variants.design]
+  capital-q = "crossing"
   ampersand = "closed"
   at = "fourfold"
   zero = "slashed-oval"
@@ -172,7 +175,6 @@ no-ligation = true
   h = "straight"
   i = "tailed-serifed"
   j = "serifed"
-  k = "symmetric-connected-bottom-right-serifed"
   l = "tailed-serifed"
   m = "normal"
   n = "straight"
@@ -209,4 +211,3 @@ angle = 9.4
 shape = "italic"
 menu = "italic"
 css = "italic"
-
