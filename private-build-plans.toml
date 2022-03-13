@@ -9,11 +9,11 @@ no-ligation = true
   inherits = "ss08"
 
   [buildPlans.iosevka-julsh.variants.design]
+  capital-q = "crossing"
   ampersand = "closed"
   at = "fourfold"
   e = "rounded"
   w = "straight"
-  capital-q = "curly-tailed"
   zero = "slashed-oval"
   two = "straight-neck"
   three = "two-arcs"
@@ -46,11 +46,11 @@ no-ligation = true
   inherits = "ss08"
 
   [buildPlans.iosevka-julsh-mono.variants.design]
+  capital-q = "crossing"
   ampersand = "closed"
   at = "fourfold"
   e = "rounded"
   w = "straight"
-  capital-q = "curly-tailed"
   zero = "slashed-oval"
   two = "straight-neck"
   three = "two-arcs"
@@ -83,6 +83,7 @@ no-ligation = true
   inherits = "ss08"
 
   [buildPlans.iosevka-julsh-curly.variants.design]
+  capital-q = "crossing"
   ampersand = "closed"
   at = "fourfold"
   zero = "slashed-oval"
@@ -151,6 +152,7 @@ no-ligation = true
   inherits = "ss08"
 
   [buildPlans.iosevka-julsh-curly-mono.variants.design]
+  capital-q = "crossing"
   ampersand = "closed"
   at = "fourfold"
   zero = "slashed-oval"
