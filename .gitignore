@@ -1,4 +1,1 @@
-/**
-!.gitignore
-!build.sh
-!private-build-plans.toml
+.DS_Store
