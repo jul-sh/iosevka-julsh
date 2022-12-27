@@ -1,3 +1,5 @@
+set -e
+rm -rf iosevka-repo
 git clone --depth 1 --branch v17.0.1 https://github.com/be5invis/Iosevka.git iosevka-repo
 (cd iosevka-repo && git reset --hard 398451d7c541ae2c83425d240b4d7bc5e70e5a07)
 cp ./private-build-plans.toml ./iosevka-repo
