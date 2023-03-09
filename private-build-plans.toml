@@ -1,14 +1,14 @@
-[buildPlans.iosevka-julsh-curly]
-family = "Iosevka Julsh Curly"
+[buildPlans.iosevka-julsh]
+family = "Iosevka Julsh"
 spacing = "quasi-proportional"
 serifs = "sans"
 no-cv-ss = true
 no-ligation = true
 
-[buildPlans.iosevka-julsh-curly.variants]
+[buildPlans.iosevka-julsh.variants]
 inherits = "ss08"
 
-[buildPlans.iosevka-julsh-curly.variants.design]
+[buildPlans.iosevka-julsh.variants.design]
 capital-q = "crossing"
 ampersand = "closed"
 at = "fourfold"
@@ -30,29 +30,29 @@ v = "curly"
 w = "straight"
 y = "curly-turn"
 
-[buildPlans.iosevka-julsh-curly.slopes.upright]
+[buildPlans.iosevka-julsh.slopes.upright]
 angle = 0
 shape = "upright"
 menu = "upright"
 css = "normal"
 
-[buildPlans.iosevka-julsh-curly.slopes.italic]
+[buildPlans.iosevka-julsh.slopes.italic]
 angle = 9.4
 shape = "italic"
 menu = "italic"
 css = "italic"
 
-[buildPlans.iosevka-julsh-curly-mono]
-family = "Iosevka Julsh Curly Mono"
+[buildPlans.iosevka-julsh-mono]
+family = "Iosevka Julsh Mono"
 spacing = "normal"
 serifs = "sans"
 no-cv-ss = true
 no-ligation = true
 
-[buildPlans.iosevka-julsh-curly-mono.variants]
+[buildPlans.iosevka-julsh-mono.variants]
 inherits = "ss08"
 
-[buildPlans.iosevka-julsh-curly-mono.variants.design]
+[buildPlans.iosevka-julsh-mono.variants.design]
 capital-q = "crossing"
 ampersand = "closed"
 at = "fourfold"
@@ -74,13 +74,13 @@ v = "curly"
 w = "straight"
 y = "curly-turn"
 
-[buildPlans.iosevka-julsh-curly-mono.slopes.upright]
+[buildPlans.iosevka-julsh-mono.slopes.upright]
 angle = 0
 shape = "upright"
 menu = "upright"
 css = "normal"
 
-[buildPlans.iosevka-julsh-curly-mono.slopes.italic]
+[buildPlans.iosevka-julsh-mono.slopes.italic]
 angle = 9.4
 shape = "italic"
 menu = "italic"
