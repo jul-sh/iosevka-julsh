@@ -42,6 +42,9 @@ shape = "italic"
 menu = "italic"
 css = "italic"
 
+[buildPlans.iosevka-julsh.metric-override]
+leading = 1100
+
 [buildPlans.iosevka-julsh-mono]
 family = "Iosevka Julsh Mono"
 spacing = "normal"
@@ -85,3 +88,6 @@ angle = 9.4
 shape = "italic"
 menu = "italic"
 css = "italic"
+
+[buildPlans.iosevka-julsh-mono.metric-override]
+leading = 1100
