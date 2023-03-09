@@ -1,79 +1,3 @@
-[buildPlans.iosevka-julsh]
-family = "Iosevka Julsh"
-spacing = "quasi-proportional"
-serifs = "sans"
-no-cv-ss = true
-no-ligation = true
-
-  [buildPlans.iosevka-julsh.variants]
-  inherits = "ss08"
-
-  [buildPlans.iosevka-julsh.variants.design]
-  capital-q = "crossing"
-  ampersand = "closed"
-  at = "fourfold"
-  e = "rounded"
-  w = "straight"
-  y = "curly-turn"
-  zero = "slashed-oval"
-  two = "straight-neck"
-  three = "two-arcs"
-  five = "oblique-upper-left-bar"
-  six = "open-contour"
-  eight = "crossing"
-  nine = "open-contour"
-  dollar = "through"
-
-[buildPlans.iosevka-julsh.slopes.upright]
-angle = 0
-shape = "upright"
-menu = "upright"
-css = "normal"
-
-[buildPlans.iosevka-julsh.slopes.italic]
-angle = 9.4
-shape = "italic"
-menu = "italic"
-css = "italic"
-
-[buildPlans.iosevka-julsh-mono]
-family = "Iosevka Julsh Mono"
-spacing = "normal"
-serifs = "sans"
-no-cv-ss = true
-no-ligation = true
-
-  [buildPlans.iosevka-julsh-mono.variants]
-  inherits = "ss08"
-
-  [buildPlans.iosevka-julsh-mono.variants.design]
-  capital-q = "crossing"
-  ampersand = "closed"
-  at = "fourfold"
-  e = "rounded"
-  w = "straight"
-  y = "curly-turn"
-  zero = "slashed-oval"
-  two = "straight-neck"
-  three = "two-arcs"
-  five = "oblique-upper-left-bar"
-  six = "open-contour"
-  eight = "crossing"
-  nine = "open-contour"
-  dollar = "through"
-
-[buildPlans.iosevka-julsh-mono.slopes.upright]
-angle = 0
-shape = "upright"
-menu = "upright"
-css = "normal"
-
-[buildPlans.iosevka-julsh-mono.slopes.italic]
-angle = 9.4
-shape = "italic"
-menu = "italic"
-css = "italic"
-
 [buildPlans.iosevka-julsh-curly]
 family = "Iosevka Julsh Curly"
 spacing = "quasi-proportional"
@@ -81,30 +5,30 @@ serifs = "sans"
 no-cv-ss = true
 no-ligation = true
 
-  [buildPlans.iosevka-julsh-curly.variants]
-  inherits = "ss08"
+[buildPlans.iosevka-julsh-curly.variants]
+inherits = "ss08"
 
-  [buildPlans.iosevka-julsh-curly.variants.design]
-  capital-q = "crossing"
-  ampersand = "closed"
-  at = "fourfold"
-  zero = "slashed-oval"
-  two = "straight-neck"
-  three = "two-arcs"
-  five = "oblique-upper-left-bar"
-  six = "open-contour"
-  eight = "crossing"
-  nine = "open-contour"
-  dollar = "through"
-  d = "tailed-serifless"
-  e = "rounded"
-  i = "tailed-serifed"
-  j = "serifed"
-  l = "tailed-serifed"
-  u = "tailed"
-  v = "curly"
-  w = "straight"
-  y = "curly-turn"
+[buildPlans.iosevka-julsh-curly.variants.design]
+capital-q = "crossing"
+ampersand = "closed"
+at = "fourfold"
+zero = "slashed-oval"
+two = "straight-neck"
+three = "two-arcs"
+five = "oblique-upper-left-bar"
+six = "open-contour"
+eight = "crossing"
+nine = "open-contour"
+dollar = "through"
+d = "tailed-serifless"
+e = "rounded"
+i = "tailed-serifed"
+j = "serifed"
+l = "tailed-serifed"
+u = "tailed"
+v = "curly"
+w = "straight"
+y = "curly-turn"
 
 [buildPlans.iosevka-julsh-curly.slopes.upright]
 angle = 0
@@ -125,30 +49,30 @@ serifs = "sans"
 no-cv-ss = true
 no-ligation = true
 
-  [buildPlans.iosevka-julsh-curly-mono.variants]
-  inherits = "ss08"
+[buildPlans.iosevka-julsh-curly-mono.variants]
+inherits = "ss08"
 
-  [buildPlans.iosevka-julsh-curly-mono.variants.design]
-  capital-q = "crossing"
-  ampersand = "closed"
-  at = "fourfold"
-  zero = "slashed-oval"
-  two = "straight-neck"
-  three = "two-arcs"
-  five = "oblique-upper-left-bar"
-  six = "open-contour"
-  eight = "crossing"
-  nine = "open-contour"
-  dollar = "through"
-  d = "tailed-serifless"
-  e = "rounded"
-  i = "tailed-serifed"
-  j = "serifed"
-  l = "tailed-serifed"
-  u = "tailed"
-  v = "curly"
-  w = "straight"
-  y = "curly-turn"
+[buildPlans.iosevka-julsh-curly-mono.variants.design]
+capital-q = "crossing"
+ampersand = "closed"
+at = "fourfold"
+zero = "slashed-oval"
+two = "straight-neck"
+three = "two-arcs"
+five = "oblique-upper-left-bar"
+six = "open-contour"
+eight = "crossing"
+nine = "open-contour"
+dollar = "through"
+d = "tailed-serifless"
+e = "rounded"
+i = "tailed-serifed"
+j = "serifed"
+l = "tailed-serifed"
+u = "tailed"
+v = "curly"
+w = "straight"
+y = "curly-turn"
 
 [buildPlans.iosevka-julsh-curly-mono.slopes.upright]
 angle = 0
