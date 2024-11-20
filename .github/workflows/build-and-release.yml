@@ -33,12 +33,14 @@ jobs:
           mkdir -p output
           zip -r output/fonts.zip output/
 
-      # Upload artifacts
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: font-artifacts
-          path: output/fonts.zip
+      # Create a tag for the release
+      - name: Create tag
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          TAG_NAME="release-$(date +'%Y%m%d-%H%M%S')"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
 
       # Create a release and upload fonts
       - name: Create Release
@@ -53,3 +55,4 @@ jobs:
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ env.TAG_NAME }}
