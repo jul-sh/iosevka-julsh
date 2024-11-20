@@ -1,0 +1,55 @@
+name: Build and Release Fonts
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-fonts:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      # Build Docker container and run the build.sh script
+      - name: Build fonts using Docker
+        run: |
+          make
+
+      # Archive the output fonts
+      - name: Archive output fonts
+        run: |
+          mkdir -p output
+          zip -r output/fonts.zip output/
+
+      # Upload artifacts
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: font-artifacts
+          path: output/fonts.zip
+
+      # Create a release and upload fonts
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: output/fonts.zip
+          name: Font Build - ${{ github.sha }}
+          body: |
+            Fonts generated from commit ${{ github.sha }}.
+            Download the .ttf files from the assets below.
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
