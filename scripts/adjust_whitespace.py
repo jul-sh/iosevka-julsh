@@ -30,6 +30,16 @@ for file_name in os.listdir(input_folder):
         new_width = original_width * 0.85  # Equivalent to CSS word-spacing: -0.15ch
         glyph.width = new_width
 
+        # Adjust kerning for punctuation that may affect word spacing
+        punctuation = [0x2E, 0x2C, 0x3B, 0x3A, 0x21, 0x3F]  # Period, comma, semicolon, colon, exclamation, question mark
+        for punct in punctuation:
+            if font[punct].isWorthOutputting():
+                for glyph in font:
+                    if glyph.isWorthOutputting():
+                        font.addLookup("kern_punct", "gpos_pair", (), (("kern", (("DFLT", ("dflt")),)),))
+                        font.addLookupSubtable("kern_punct", "kern_punct_subtable")
+                        font[punct].addPosSub("kern_punct_subtable", glyph.glyphname, 0, 0, int(original_width * -0.15), 0)
+
         # Save the modified font
         font.generate(output_path)
 
