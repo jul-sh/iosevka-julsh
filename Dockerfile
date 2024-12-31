@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y curl git \
     && apt-get install -y nodejs \
     && apt-get clean
 
-RUN apt-get update && apt-get install -y python3-fontforge && apt-get clean
+RUN apt-get update && apt-get install -y python3-fontforge && apt-get install -y python3-fonttools && apt-get clean
 
 # Set the working directory
 WORKDIR /app

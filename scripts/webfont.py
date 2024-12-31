@@ -1,42 +1,53 @@
-import fontforge
 import os
-import sys
+import argparse
+from fontTools.ttLib import TTFont
+from fontTools.subset import Subsetter, Options
+from fontTools.ttLib.sfnt import WOFF2FlavorData
 
-# Get the folders from command-line arguments
-if len(sys.argv) < 3:
-    print("Usage: python3 webfont.py <input_folder> <webfont_output_folder>")
-    sys.exit(1)
+def convert_ttf_to_woff2(input_folder, output_folder):
+    """
+    Converts all TTF files in a folder to WOFF2 format with the Basic Latin charset.
 
-input_folder = sys.argv[1]
-webfont_output_folder = sys.argv[2]
+    :param input_folder: Path to the folder containing TTF files.
+    :param output_folder: Path to the folder where WOFF2 files will be saved.
+    """
+    # Ensure the output folder exists
+    os.makedirs(output_folder, exist_ok=True)
 
-# Create the webfont output directory if it doesn't exist
-os.makedirs(webfont_output_folder, exist_ok=True)
+    # Define Basic Latin Unicode range (U+0000 to U+007F)
+    basic_latin_range = [(0x0000, 0x007F)]
 
-# Basic Latin charset (Unicode range 0x0000 to 0x007F)
-basic_latin = range(0x0000, 0x0080)
+    # Process each TTF file in the folder
+    for file_name in os.listdir(input_folder):
+        if file_name.lower().endswith(".ttf"):
+            input_path = os.path.join(input_folder, file_name)
+            output_path = os.path.join(output_folder, os.path.splitext(file_name)[0] + ".woff2")
 
-# Process all .ttf files in the folder
-for file_name in os.listdir(input_folder):
-    if file_name.endswith(".ttf"):
-        input_path = os.path.join(input_folder, file_name)
-        webfont_path = os.path.join(webfont_output_folder, file_name.replace('.ttf', '.woff2'))
+            try:
+                # Load the font
+                font = TTFont(input_path)
 
-        print(f"Processing {file_name}...")
+                # Subset the font to Basic Latin charset
+                subsetter = Subsetter()
+                options = Options()
+                options.unicodes = basic_latin_range
+                subsetter.populate(unicodes=options.unicodes)
+                subsetter.subset(font)
 
-        # Open the font file
-        font = fontforge.open(input_path)
+                # Save as WOFF2
+                with open(output_path, "wb") as output_file:
+                    font.flavor = "woff2"
+                    font.save(output_file)
 
-        # Create a subset with only Basic Latin characters for the webfont
-        font.selection.none()
-        for char in basic_latin:
-            if font.selection.select(("more", None), char):
-                font.selection.select(("less", None), char)
-        font.selection.invert()
-        font.clear()
+                print(f"Converted {file_name} to WOFF2 format.")
+            except Exception as e:
+                print(f"Failed to convert {file_name}: {e}")
 
-        # Generate WOFF2 webfont
-        font.generate(webfont_path, flags=("opentype",))
-        print(f"Saved WOFF2 webfont to {webfont_path}")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Convert TTF files to WOFF2 format with Basic Latin charset.")
+    parser.add_argument("input_folder", help="Path to the folder containing TTF files.")
+    parser.add_argument("output_folder", help="Path to the folder where WOFF2 files will be saved.")
 
-print("Processing complete. All webfonts have been generated.")
+    args = parser.parse_args()
+
+    convert_ttf_to_woff2(args.input_folder, args.output_folder)
