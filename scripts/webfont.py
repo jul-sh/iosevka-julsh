@@ -30,13 +30,13 @@ for file_name in os.listdir(input_folder):
         # Create a subset with only Basic Latin characters for the webfont
         font.selection.none()
         for char in basic_latin:
-            if font.selection.select(("more", None), char):
-                font.selection.select(("less", None), char)
+            font.selection.select(char)
         font.selection.invert()
         font.clear()
 
         # Generate WOFF2 webfont
-        font.generate(webfont_path, flags=("opentype",))
+        font.generate(webfont_path, flags=("woff2",))
+        font.close()
         print(f"Saved WOFF2 webfont to {webfont_path}")
 
 print("Processing complete. All webfonts have been generated.")
