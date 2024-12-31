@@ -4,6 +4,7 @@ This repository contains custom builds of the Iosevka font, tailored for persona
 
 1. Iosevka Julsh: A quasi-proportional sans-serif font
 2. Iosevka Julsh Mono: A monospaced variant for coding.
+3. Iosevka Julsh Prose: A quasi-proportional sans-serif font with a more minimalist design.
 
 The fonts are built and released automatically for each commit.
 
