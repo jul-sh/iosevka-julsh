@@ -31,7 +31,11 @@ jobs:
       - name: Archive output fonts
         run: |
           mkdir -p output
-          zip -r output/fonts.zip output/
+          find output -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' dir; do
+            if [ "$dir" != "output" ]; then
+              zip -r "output/$(basename "$dir").zip" "$dir"
+            fi
+          done
 
       # Create a tag for the release
       - name: Create tag
@@ -49,7 +53,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          files: output/fonts.zip
+          files: output/*.zip
           name: Font Build - ${{ github.sha }}
           body: |
             Fonts generated from commit ${{ github.sha }}.
