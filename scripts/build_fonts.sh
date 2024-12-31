@@ -48,7 +48,7 @@ prep_environment() {
 
 # Build Iosevka Julsh Mono
 build_julsh_mono() {
-    mkdir -p "$OUTPUT_DIR/iosevka-julsh-mono/"
+    mkdir -p "$OUTPUT_DIR/iosevka-julsh-mono/" "$OUTPUT_DIR/iosevka-julsh-mono-webfonts"
     echo "Building Iosevka Julsh Mono..."
     npm run build -- ttf::iosevka-julsh-mono
     echo "Iosevka Julsh Mono built successfully."
@@ -65,22 +65,20 @@ build_julsh_mono() {
 
 # Build Iosevka Julsh
 build_julsh() {
-    mkdir -p "$OUTPUT_DIR/iosevka-julsh-temp" "$OUTPUT_DIR/iosevka-julsh"
+    mkdir -p "$OUTPUT_DIR/iosevka-julsh" "$OUTPUT_DIR/iosevka-julsh-webfonts"
     echo "Building Iosevka Julsh..."
     npm run build -- ttf::iosevka-julsh
     echo "Iosevka Julsh built successfully."
 
     # Run the Python adjustment script on the generated fonts
     echo "Running whitespace adjustment script on Iosevka Julsh..."
-    python3 /app/scripts/adjust_whitespace.py "$OUTPUT_DIR/iosevka-julsh-temp" "$OUTPUT_DIR/iosevka-julsh"
-    rm -rf "$OUTPUT_DIR/iosevka-julsh-temp" # remove font without whitespace adjustment
+    python3 /app/scripts/adjust_whitespace.py "$OUTPUT_DIR/iosevka-julsh"
+    echo "Whitespace adjustment completed."
 
     # Generate webfonts for Iosevka Julsh
     echo "Generating webfonts for Iosevka Julsh..."
     python3 /app/scripts/webfont.py "$OUTPUT_DIR/iosevka-julsh" "$OUTPUT_DIR/iosevka-julsh-webfonts"
     echo "Webfonts generated for Iosevka Julsh."
-
-    echo "Whitespace adjustment completed. Iosevka Julsh has been copied to output dir."
 }
 
 # Main execution
