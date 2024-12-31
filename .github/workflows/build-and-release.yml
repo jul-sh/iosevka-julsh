@@ -35,10 +35,12 @@ jobs:
 
       # Create a tag for the release
       - name: Create tag
+        id: create_tag
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           TAG_NAME="release-$(date +'%Y%m%d-%H%M%S')"
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           git tag $TAG_NAME
           git push origin $TAG_NAME
 
