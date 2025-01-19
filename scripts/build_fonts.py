@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Script to build custom Iosevka fonts from private build plans.
+Build custom Iosevka fonts from private build plans:
 
 Steps:
-  1) Clone/update a specific commit of the Iosevka repo.
-  2) Install npm dependencies.
-  3) Parse build plan names from `private-build-plans.toml`.
-  4) For each plan:
-     - Build TTF fonts
-     - Optionally adjust whitespace (non-mono only)
-     - Generate WOFF2 webfonts (subset to Basic Latin)
+  1. Clone or update the Iosevka repo at a specific commit.
+  2. Install npm dependencies.
+  3. Parse plan names from `private-build-plans.toml`.
+  4. For each plan:
+     - Build TTFs
+     - Optionally adjust whitespace (for non-mono plans)
+     - Generate subsetted (Basic Latin) WOFF2 webfonts.
 """
 
 import os
@@ -17,7 +17,15 @@ import re
 import shutil
 import subprocess
 import sys
-import fontforge  # Make sure python3-fontforge is installed
+import traceback
+
+# Make sure python3-fontforge is installed on your system
+try:
+    import fontforge
+except ImportError:
+    print("ERROR: Could not import fontforge. Please ensure python3-fontforge is installed.")
+    print("On Ubuntu/Debian: sudo apt-get install python3-fontforge")
+    sys.exit(1)
 
 ###############################################################################
 # Configuration
@@ -41,164 +49,256 @@ def run_cmd(command, cwd=None):
     Execute a shell command and raise an error if it fails.
     """
     print(f"[cmd] {command}")
-    subprocess.check_call(command, shell=True, cwd=cwd)
+    try:
+        subprocess.check_call(command, shell=True, cwd=cwd)
+    except subprocess.CalledProcessError as e:
+        print(f"ERROR: Command failed with exit code {e.returncode}")
+        print(f"Command was: {command}")
+        print(f"Working directory: {cwd or os.getcwd()}")
+        raise
 
 ###############################################################################
-# Steps
+# Environment Preparation
 ###############################################################################
 
 def prep_environment():
     """
-    Prepare the environment:
-      - Create WORKDIR if needed
-      - Clone or update the Iosevka repo
-      - Check out the specified commit
-      - Copy private build plans
-      - Install npm dependencies
-      - Clean OUTPUT_DIR
+    Prepare the environment by:
+      - Ensuring WORKDIR exists
+      - Cloning or updating the Iosevka repo
+      - Checking out the specified commit
+      - Copying private build plans
+      - Installing npm dependencies
+      - Cleaning OUTPUT_DIR
     """
-    os.makedirs(WORKDIR, exist_ok=True)
-    os.chdir(WORKDIR)
+    try:
+        os.makedirs(WORKDIR, exist_ok=True)
+        os.chdir(WORKDIR)
 
-    # Clone or update the repository
-    if os.path.isdir(REPO_DIR):
-        print("[prep_environment] Updating existing Iosevka repository...")
-        run_cmd(f"git fetch origin {IOSEVKA_REPO_BRANCH}", cwd=REPO_DIR)
-        run_cmd(f"git reset --hard {IOSEVKA_REPO_COMMIT}", cwd=REPO_DIR)
-        run_cmd("git clean -fdx", cwd=REPO_DIR)
-    else:
-        print("[prep_environment] Cloning Iosevka repository...")
-        run_cmd(f"git clone --depth 1 --branch {IOSEVKA_REPO_BRANCH} {IOSEVKA_REPO_URL} iosevka-repo")
-        run_cmd(f"git reset --hard {IOSEVKA_REPO_COMMIT}", cwd=REPO_DIR)
+        # Clone or update the repository
+        if os.path.isdir(REPO_DIR):
+            print("[prep_environment] Updating existing Iosevka repository...")
+            run_cmd(f"git fetch origin {IOSEVKA_REPO_BRANCH}", cwd=REPO_DIR)
+            run_cmd(f"git reset --hard {IOSEVKA_REPO_COMMIT}", cwd=REPO_DIR)
+            run_cmd("git clean -fdx", cwd=REPO_DIR)
+        else:
+            print("[prep_environment] Cloning Iosevka repository...")
+            run_cmd(
+                f"git clone --depth 1 --branch {IOSEVKA_REPO_BRANCH} {IOSEVKA_REPO_URL} iosevka-repo"
+            )
+            run_cmd(f"git reset --hard {IOSEVKA_REPO_COMMIT}", cwd=REPO_DIR)
 
-    # Copy private build plans
-    print("[prep_environment] Copying private build plans...")
-    shutil.copyfile(PRIVATE_TOML, os.path.join(REPO_DIR, "private-build-plans.toml"))
+        # Copy private build plans
+        print("[prep_environment] Copying private build plans...")
+        if not os.path.exists(PRIVATE_TOML):
+            raise FileNotFoundError(f"Private build plans file not found: {PRIVATE_TOML}")
+        shutil.copyfile(PRIVATE_TOML, os.path.join(REPO_DIR, "private-build-plans.toml"))
 
-    # Install npm dependencies
-    print("[prep_environment] Installing npm dependencies...")
-    os.chdir(REPO_DIR)
-    run_cmd("npm ci")
+        # Install npm dependencies
+        print("[prep_environment] Installing npm dependencies...")
+        os.chdir(REPO_DIR)
+        run_cmd("npm ci")
 
-    # Clean the output directory
-    if os.path.isdir(OUTPUT_DIR):
-        print(f"[prep_environment] Cleaning output directory: '{OUTPUT_DIR}'...")
-        for item in os.listdir(OUTPUT_DIR):
-            item_path = os.path.join(OUTPUT_DIR, item)
-            if os.path.isfile(item_path):
-                os.remove(item_path)
-            else:
-                shutil.rmtree(item_path)
-    else:
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        # Clean the output directory
+        if os.path.isdir(OUTPUT_DIR):
+            print(f"[prep_environment] Cleaning output directory: '{OUTPUT_DIR}'...")
+            for item in os.listdir(OUTPUT_DIR):
+                item_path = os.path.join(OUTPUT_DIR, item)
+                if os.path.isfile(item_path):
+                    os.remove(item_path)
+                else:
+                    shutil.rmtree(item_path)
+        else:
+            os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+    except Exception as e:
+        print(f"ERROR during environment preparation: {str(e)}")
+        print("Traceback:")
+        traceback.print_exc()
+        raise
+
+###############################################################################
+# Build Plan Parsing
+###############################################################################
 def get_build_plans():
     """
-    Parse PRIVATE_TOML for lines like [buildPlans.planName].
-    Return all discovered planName values in a list.
+    Look in PRIVATE_TOML for lines matching [buildPlans.xyz].
+    Return a list of all 'xyz' found, excluding any with dots which are variants.
     """
-    plans = []
-    pattern = re.compile(r'^\[buildPlans\.(.+)\]$')
+    try:
+        plans = []
+        pattern = re.compile(r'^\[buildPlans\.(.+)\]$')
+        with open(PRIVATE_TOML, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                match = pattern.match(line)
+                if match:
+                    plan_name = match.group(1)
+                    if '.' not in plan_name:
+                        plans.append(plan_name)
 
-    with open(PRIVATE_TOML, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            match = pattern.match(line)
-            if match:
-                plans.append(match.group(1))
+        if not plans:
+            print("WARNING: No build plans found in private-build-plans.toml")
 
-    return plans
+        return plans
+    except FileNotFoundError:
+        print(f"ERROR: Build plans file not found: {PRIVATE_TOML}")
+        raise
+    except Exception as e:
+        print(f"ERROR parsing build plans: {str(e)}")
+        raise
+
+###############################################################################
+# Whitespace Adjustment
+###############################################################################
 
 def adjust_whitespace(input_folder):
     """
-    For each .ttf in 'input_folder':
-      - Reduce space character width to 85% of original
-      - Add kerning for punctuation (.,;:!?)
-      - Overwrite the font file in place
+    For each TTF in 'input_folder':
+      - Scale space to 85% of its original width (integer)
+      - Create a kerning lookup to shift punctuation (. , ; : ! ?) left ~0.15ch
+      - Overwrite the existing font file
     """
-    for file_name in os.listdir(input_folder):
-        if file_name.endswith(".ttf"):
-            file_path = os.path.join(input_folder, file_name)
-            print(f"[adjust_whitespace] Processing {file_name}...")
+    if not os.path.isdir(input_folder):
+        raise FileNotFoundError(f"Input folder not found: {input_folder}")
 
+    ttf_files = [f for f in os.listdir(input_folder) if f.endswith(".ttf")]
+    if not ttf_files:
+        print(f"WARNING: No TTF files found in {input_folder}")
+        return
+
+    for file_name in ttf_files:
+        file_path = os.path.join(input_folder, file_name)
+        print(f"[adjust_whitespace] Processing {file_name}...")
+
+        try:
             font = fontforge.open(file_path)
+        except Exception as e:
+            print(f"ERROR: Failed to open font file {file_path}")
+            print(f"FontForge error: {str(e)}")
+            raise
 
-            # Adjust space width
+        try:
+            # Adjust space width (must be an integer)
+            if 0x20 not in font:
+                raise ValueError("Font missing required space character (U+0020)")
+
             space_glyph = font[0x20]
-            original_width = space_glyph.width
-            space_glyph.width = original_width * 0.85
+            orig_width = space_glyph.width
+            new_space_width = int(round(orig_width * 0.85))
+            space_glyph.width = new_space_width
 
             # Create a kerning lookup
-            font.addLookup(
-                "kern_punct", "gpos_pair", None,
-                (("kern", (("DFLT", ("dflt")),)),)
-            )
-            font.addLookupSubtable("kern_punct", "kern_punct_subtable")
+            try:
+                font.addLookup("kern_punct", "gpos_pair", None, (("kern", (("DFLT", ("dflt")),)),))
+                font.addLookupSubtable("kern_punct", "kern_punct_subtable")
+            except Exception as e:
+                print(f"ERROR: Failed to create kerning lookup in {file_name}")
+                print(f"FontForge error: {str(e)}")
+                raise
 
-            # Shift punctuation left by ~0.15ch
-            punctuation = [0x2E, 0x2C, 0x3B, 0x3A, 0x21, 0x3F]  # . , ; : ! ?
+            # We want punctuation to shift left by ~0.15ch
+            #   => Negative x offset in the "right" glyph's placement
+            punctuation = [0x2E, 0x2C, 0x3B, 0x3A, 0x21, 0x3F]
+            shift_val = int(round(orig_width * -0.15))
+
             for punct in punctuation:
-                if punct in font:
-                    for g in font.glyphs():
-                        if g.isWorthOutputting():
-                            font[punct].addPosSub(
+                if punct not in font:
+                    print(f"WARNING: Font missing punctuation character U+{punct:04X}")
+                    continue
+
+                punct_glyph = font[punct]
+                for g in font.glyphs():
+                    if g.isWorthOutputting():
+                        try:
+                            # addPosSub requires 10 args for pair-position:
+                            #  1) subtable name
+                            #  2) "other glyph" or glyph set
+                            #  3,4,5,6) xPlacement1, yPlacement1, xAdvance1, yAdvance1
+                            #  7,8,9,10) xPlacement2, yPlacement2, xAdvance2, yAdvance2
+                            # We want the *second* glyph offset to be shift_val in xPlacement2
+                            # => We'll keep the first glyph offset at 0
+                            punct_glyph.addPosSub(
                                 "kern_punct_subtable",
                                 g.glyphname,
-                                0, 0,
-                                int(original_width * -0.15), 0
+                                0,  # xPlacement1
+                                0,  # yPlacement1
+                                0,  # xAdvance1
+                                0,  # yAdvance1
+                                shift_val,  # xPlacement2
+                                0,          # yPlacement2
+                                0,          # xAdvance2
+                                0           # yAdvance2
                             )
+                        except Exception as e:
+                            print(f"ERROR: Failed to add kerning for {punct_glyph.glyphname} with {g.glyphname}")
+                            print(f"FontForge error: {str(e)}")
+                            raise
 
-            font.generate(file_path)  # Overwrite
-            font.close()
-            print(f"[adjust_whitespace] Overwrote font in place: {file_path}")
+            # Overwrite existing file
+            try:
+                font.generate(file_path)
+                print(f"[adjust_whitespace] Overwrote font in place: {file_path}")
+            except Exception as e:
+                print(f"ERROR: Failed to save modified font to {file_path}")
+                print(f"FontForge error: {str(e)}")
+                raise
+            finally:
+                font.close()
+
+        except Exception as e:
+            print(f"ERROR: Failed to process font {file_path}")
+            print(f"FontForge error: {str(e)}")
+            raise
 
     print("[adjust_whitespace] Processing complete.")
 
+###############################################################################
+# Webfont Generation
+###############################################################################
+
 def generate_webfonts(input_folder, webfont_output_folder):
     """
-    For each .ttf in 'input_folder':
+    For each TTF in 'input_folder':
       - Subset to Basic Latin (U+0000..U+007F)
       - Generate a .woff2 in 'webfont_output_folder'
     """
     os.makedirs(webfont_output_folder, exist_ok=True)
 
-    basic_latin = range(0x0000, 0x0080)
-
     for file_name in os.listdir(input_folder):
-        if file_name.endswith(".ttf"):
-            input_path = os.path.join(input_folder, file_name)
-            woff2_path = os.path.join(
-                webfont_output_folder,
-                file_name.replace(".ttf", ".woff2")
-            )
+        if not file_name.endswith(".ttf"):
+            continue
 
-            print(f"[webfont] Processing {file_name}...")
-            font = fontforge.open(input_path)
+        input_path = os.path.join(input_folder, file_name)
+        woff2_path = os.path.join(webfont_output_folder, file_name.replace(".ttf", ".woff2"))
 
-            # Keep only Basic Latin glyphs
-            font.selection.none()
-            for char in basic_latin:
-                # The snippet below intentionally does a "select then invert"
-                if font.selection.select(("more", None), char):
-                    font.selection.select(("less", None), char)
-            font.selection.invert()
-            font.clear()
+        print(f"[webfont] Processing {file_name}...")
+        font = fontforge.open(input_path)
 
-            # Generate WOFF2
-            font.generate(woff2_path, flags=("opentype",))
-            font.close()
+        # Keep only U+0000..U+007F
+        font.selection.none()
+        font.selection.select(("ranges", None), 0x0000, 0x007F)
+        font.selection.invert()
+        font.clear()
 
-            print(f"[webfont] Saved WOFF2 webfont: {woff2_path}")
+        font.generate(woff2_path, flags=("opentype",))
+        font.close()
+
+        print(f"[webfont] Saved WOFF2 webfont: {woff2_path}")
 
     print("[webfont] Processing complete. All webfonts have been generated.")
+
+###############################################################################
+# Single Plan Build
+###############################################################################
 
 def build_one_plan(plan_name):
     """
     Build a single plan:
-      - `npm run build -- ttf::<plan_name>`
-      - Copy TTFs to OUTPUT_DIR/plan_name
-      - Adjust whitespace unless plan_name contains 'mono'
-      - Generate WOFF2 webfonts (subset to Basic Latin)
+      1. npm run build -- ttf::<plan_name>
+      2. Copy TTFs to OUTPUT_DIR/<plan_name>
+      3. Adjust whitespace if plan_name not 'mono'
+      4. Generate WOFF2 webfonts
     """
     print(f"\n--- Building plan '{plan_name}' ---")
 
@@ -210,7 +310,7 @@ def build_one_plan(plan_name):
     os.makedirs(webfont_out_dir, exist_ok=True)
 
     # 1) Build TTF
-    print(f"[build_one_plan] Building TTF for plan '{plan_name}'...")
+    print(f"[build_one_plan] Building TTF for '{plan_name}'...")
     run_cmd(f"npm run build -- ttf::{plan_name}", cwd=REPO_DIR)
 
     # 2) Copy TTFs
@@ -233,20 +333,34 @@ def build_one_plan(plan_name):
     print(f"[build_one_plan] Generating webfonts for '{plan_name}'...")
     generate_webfonts(plan_out_dir, webfont_out_dir)
 
+###############################################################################
+# Main
+###############################################################################
+
 def main():
     """
-    Main entry point. Prepares environment, reads build plans,
-    and builds each plan.
+    Main entry: Prepares environment, gathers build plans,
+    and builds each plan in turn.
     """
-    prep_environment()
+    try:
+        prep_environment()
 
-    build_plans = get_build_plans()
-    print("[main] Discovered build plans:", build_plans)
+        build_plans = get_build_plans()
+        print("[main] Discovered build plans:", build_plans)
 
-    for plan_name in build_plans:
-        build_one_plan(plan_name)
+        for plan_name in build_plans:
+            try:
+                build_one_plan(plan_name)
+            except Exception as e:
+                print(f"ERROR building plan '{plan_name}': {str(e)}")
+                print("Traceback:")
+                traceback.print_exc()
+                raise
 
-    print("\nAll font builds completed successfully.")
+        print("\nAll font builds completed successfully.")
+    except Exception as e:
+        print(f"\nERROR: Font build failed: {str(e)}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
