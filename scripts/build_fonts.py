@@ -41,6 +41,10 @@ WORKDIR: str = "/app/workdir"
 REPO_DIR: str = os.path.join(WORKDIR, "iosevka-repo")
 PRIVATE_TOML: str = "/app/private-build-plans.toml"
 
+# Whitespace Adjustment Config
+SPACE_WIDTH_REDUCTION: float = 0.23 # %
+PUNCTUATION_SHIFT: float = 0.23 # %
+
 ###############################################################################
 # Utilities
 ###############################################################################
@@ -208,8 +212,7 @@ def adjust_whitespace(input_folder: str) -> None:
             space_glyph = font[0x20]
             orig_width = space_glyph.width
             # Reduce space width bys and shift punctuation left by same amount
-            width_reduction = 0.15
-            new_space_width = int(round(orig_width * (1 - width_reduction)))
+            new_space_width = int(round(orig_width * (1 - SPACE_WIDTH_REDUCTION)))
             space_glyph.width = new_space_width
 
             # Create a kerning lookup
@@ -235,7 +238,7 @@ def adjust_whitespace(input_folder: str) -> None:
                 0x2D,  # hyphen
                 0x2026 # ellipsis
             ]
-            shift_val = int(round(orig_width * -width_reduction))
+            shift_val = int(round(orig_width * -PUNCTUATION_SHIFT))
 
             for punct in punctuation:
                 if punct not in font:
