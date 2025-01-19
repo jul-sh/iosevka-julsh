@@ -17,7 +17,7 @@ DOCKER_RUN_OPTIONS = --rm \
     -v $$(pwd)/output:/app/output \
     -v $$(pwd)/private-build-plans.toml:/app/private-build-plans.toml \
     fontforge-iosevka \
-    bash scripts/build_fonts.sh
+    python3 scripts/build_fonts.py
 
 # Run in CI environment (GitHub Actions)
 run-ci:
