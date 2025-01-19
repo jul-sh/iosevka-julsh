@@ -70,6 +70,11 @@ build_julsh() {
     npm run build -- ttf::iosevka-julsh
     echo "Iosevka Julsh built successfully."
 
+    # Copy the built TTFs into the output folder
+    echo "Copying Iosevka Julsh fonts to output..."
+    cp dist/iosevka-julsh/ttf/* "$OUTPUT_DIR/iosevka-julsh/"
+    echo "Iosevka Julsh fonts copied."
+
     # Run the Python adjustment script on the generated fonts
     echo "Running whitespace adjustment script on Iosevka Julsh..."
     python3 /app/scripts/adjust_whitespace.py "$OUTPUT_DIR/iosevka-julsh"
