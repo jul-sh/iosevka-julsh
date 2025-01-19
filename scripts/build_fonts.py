@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build custom Iosevka fonts from private build plans:
+Build custom Iosevka fonts from private build plans.
 
 Steps:
   1. Clone or update the Iosevka repo at a specific commit.
@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import sys
 import traceback
+from typing import List, Optional
 
 # Make sure python3-fontforge is installed on your system
 try:
@@ -31,22 +32,28 @@ except ImportError:
 # Configuration
 ###############################################################################
 
-IOSEVKA_REPO_URL = "https://github.com/be5invis/Iosevka.git"
-IOSEVKA_REPO_BRANCH = "v17.0.1"
-IOSEVKA_REPO_COMMIT = "398451d7c541ae2c83425d240b4d7bc5e70e5a07"
+IOSEVKA_REPO_URL: str = "https://github.com/be5invis/Iosevka.git"
+IOSEVKA_REPO_BRANCH: str = "v17.0.1"
+IOSEVKA_REPO_COMMIT: str = "398451d7c541ae2c83425d240b4d7bc5e70e5a07"
 
-OUTPUT_DIR = "/app/output"
-WORKDIR = "/app/workdir"
-REPO_DIR = os.path.join(WORKDIR, "iosevka-repo")
-PRIVATE_TOML = "/app/private-build-plans.toml"
+OUTPUT_DIR: str = "/app/output"
+WORKDIR: str = "/app/workdir"
+REPO_DIR: str = os.path.join(WORKDIR, "iosevka-repo")
+PRIVATE_TOML: str = "/app/private-build-plans.toml"
 
 ###############################################################################
 # Utilities
 ###############################################################################
 
-def run_cmd(command, cwd=None):
-    """
-    Execute a shell command and raise an error if it fails.
+def run_cmd(command: str, cwd: Optional[str] = None) -> None:
+    """Executes a shell command and raises an error if it fails.
+
+    Args:
+        command: The shell command to execute.
+        cwd: Optional working directory to run command in.
+
+    Raises:
+        subprocess.CalledProcessError: If command execution fails.
     """
     print(f"[cmd] {command}")
     try:
@@ -61,15 +68,15 @@ def run_cmd(command, cwd=None):
 # Environment Preparation
 ###############################################################################
 
-def prep_environment():
-    """
-    Prepare the environment by:
-      - Ensuring WORKDIR exists
-      - Cloning or updating the Iosevka repo
-      - Checking out the specified commit
-      - Copying private build plans
-      - Installing npm dependencies
-      - Cleaning OUTPUT_DIR
+def prep_environment() -> None:
+    """Prepares the build environment.
+
+    Ensures WORKDIR exists, clones/updates Iosevka repo, checks out specified commit,
+    copies build plans, installs dependencies, and cleans output directory.
+
+    Raises:
+        FileNotFoundError: If private build plans file is missing.
+        Exception: If any preparation step fails.
     """
     try:
         os.makedirs(WORKDIR, exist_ok=True)
@@ -120,13 +127,19 @@ def prep_environment():
 ###############################################################################
 # Build Plan Parsing
 ###############################################################################
-def get_build_plans():
-    """
-    Look in PRIVATE_TOML for lines matching [buildPlans.xyz].
-    Return a list of all 'xyz' found, excluding any with dots which are variants.
+
+def get_build_plans() -> List[str]:
+    """Parses build plan names from private-build-plans.toml.
+
+    Returns:
+        List of build plan names, excluding variant plans containing dots.
+
+    Raises:
+        FileNotFoundError: If build plans file is missing.
+        Exception: If parsing fails.
     """
     try:
-        plans = []
+        plans: List[str] = []
         pattern = re.compile(r'^\[buildPlans\.(.+)\]$')
         with open(PRIVATE_TOML, "r", encoding="utf-8") as f:
             for line in f:
@@ -152,12 +165,21 @@ def get_build_plans():
 # Whitespace Adjustment
 ###############################################################################
 
-def adjust_whitespace(input_folder):
-    """
-    For each TTF in 'input_folder':
-      - Scale space to 85% of its original width (integer)
-      - Create a kerning lookup to shift punctuation (. , ; : ! ?) left ~0.15ch
-      - Overwrite the existing font file
+def adjust_whitespace(input_folder: str) -> None:
+    """Adjusts whitespace metrics in TTF files.
+
+    For each TTF in input_folder:
+      - Scales space to 85% of original width (integer)
+      - Creates kerning lookup to shift punctuation left ~0.15ch
+      - Overwrites existing font file
+
+    Args:
+        input_folder: Directory containing TTF files to process.
+
+    Raises:
+        FileNotFoundError: If input folder doesn't exist.
+        ValueError: If font is missing required characters.
+        Exception: If font processing fails.
     """
     if not os.path.isdir(input_folder):
         raise FileNotFoundError(f"Input folder not found: {input_folder}")
@@ -257,11 +279,16 @@ def adjust_whitespace(input_folder):
 # Webfont Generation
 ###############################################################################
 
-def generate_webfonts(input_folder, webfont_output_folder):
-    """
-    For each TTF in 'input_folder':
-      - Subset to Basic Latin (U+0000..U+007F)
-      - Generate a .woff2 in 'webfont_output_folder'
+def generate_webfonts(input_folder: str, webfont_output_folder: str) -> None:
+    """Generates WOFF2 webfonts from TTF files.
+
+    For each TTF in input_folder:
+      - Subsets to Basic Latin (U+0000..U+007F)
+      - Generates .woff2 in webfont_output_folder
+
+    Args:
+        input_folder: Directory containing source TTF files.
+        webfont_output_folder: Directory to output WOFF2 files.
     """
     os.makedirs(webfont_output_folder, exist_ok=True)
 
@@ -292,13 +319,17 @@ def generate_webfonts(input_folder, webfont_output_folder):
 # Single Plan Build
 ###############################################################################
 
-def build_one_plan(plan_name):
-    """
-    Build a single plan:
+def build_one_plan(plan_name: str) -> None:
+    """Builds a single font plan.
+
+    Steps:
       1. npm run build -- ttf::<plan_name>
       2. Copy TTFs to OUTPUT_DIR/<plan_name>
       3. Adjust whitespace if plan_name not 'mono'
       4. Generate WOFF2 webfonts
+
+    Args:
+        plan_name: Name of the build plan to process.
     """
     print(f"\n--- Building plan '{plan_name}' ---")
 
@@ -337,10 +368,10 @@ def build_one_plan(plan_name):
 # Main
 ###############################################################################
 
-def main():
-    """
-    Main entry: Prepares environment, gathers build plans,
-    and builds each plan in turn.
+def main() -> None:
+    """Main entry point.
+
+    Prepares environment, gathers build plans, and builds each plan in turn.
     """
     try:
         prep_environment()
