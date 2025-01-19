@@ -207,7 +207,9 @@ def adjust_whitespace(input_folder: str) -> None:
 
             space_glyph = font[0x20]
             orig_width = space_glyph.width
-            new_space_width = int(round(orig_width * 0.9))
+            # Reduce space width bys and shift punctuation left by same amount
+            width_reduction = 0.15
+            new_space_width = int(round(orig_width * (1 - width_reduction)))
             space_glyph.width = new_space_width
 
             # Create a kerning lookup
@@ -221,8 +223,19 @@ def adjust_whitespace(input_folder: str) -> None:
 
             # We want punctuation to shift left by ~0.15ch
             #   => Negative x offset in the "right" glyph's placement
-            punctuation = [0x2E, 0x2C, 0x3B, 0x3A, 0x21, 0x3F]
-            shift_val = int(round(orig_width * -0.15))
+            punctuation = [
+                0x2E,  # period
+                0x2C,  # comma
+                0x3B,  # semicolon
+                0x3A,  # colon
+                0x21,  # exclamation mark
+                0x3F,  # question mark
+                0x27,  # apostrophe
+                0x22,  # quotation mark
+                0x2D,  # hyphen
+                0x2026 # ellipsis
+            ]
+            shift_val = int(round(orig_width * -width_reduction))
 
             for punct in punctuation:
                 if punct not in font:
