@@ -207,7 +207,7 @@ def adjust_whitespace(input_folder: str) -> None:
 
             space_glyph = font[0x20]
             orig_width = space_glyph.width
-            new_space_width = int(round(orig_width * 0.85))
+            new_space_width = int(round(orig_width * 0.9))
             space_glyph.width = new_space_width
 
             # Create a kerning lookup
