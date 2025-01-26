@@ -1,6 +1,6 @@
 [buildPlans.iosevka-julsh]
 family = "Iosevka Julsh"
-spacing = "quasi-proportional"
+spacing = "quasi-proportional-extension-only"
 serifs = "sans"
 noCvSs = true
 noLigation = false
