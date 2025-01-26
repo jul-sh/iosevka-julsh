@@ -4,6 +4,7 @@ spacing = "quasi-proportional"
 serifs = "sans"
 noCvSs = true
 noLigation = true
+buildTextureFeature = true
 
 [buildPlans.iosevka-julsh.variants]
 inherits = "ss08"
@@ -48,6 +49,7 @@ spacing = "normal"
 serifs = "sans"
 noCvSs = true
 noLigation = true
+buildTextureFeature = true
 
 [buildPlans.iosevka-julsh-mono.variants]
 inherits = "ss08"
