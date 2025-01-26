@@ -2,8 +2,8 @@
 family = "Iosevka Julsh"
 spacing = "quasi-proportional"
 serifs = "sans"
-no-cv-ss = true
-no-ligation = true
+noCvSs = true
+noLigation = true
 
 [buildPlans.iosevka-julsh.variants]
 inherits = "ss08"
@@ -12,10 +12,10 @@ inherits = "ss08"
 capital-q = "crossing"
 ampersand = "closed"
 at = "fourfold"
-zero = "slashed-oval"
-two = "straight-neck"
+zero = "oval-slashed"
+two = "straight-neck-serifless"
 three = "two-arcs"
-five = "oblique-upper-left-bar"
+five = "oblique-flat-serifless"
 six = "open-contour"
 eight = "crossing"
 nine = "open-contour"
@@ -25,10 +25,10 @@ e = "rounded"
 i = "tailed-serifed"
 j = "serifed"
 l = "tailed-serifed"
-u = "tailed"
-v = "curly"
-w = "straight"
-y = "curly-turn"
+u = "tailed-serifless"
+v = "curly-serifless"
+w = "straight-serifless"
+y = "curly-turn-serifless"
 
 [buildPlans.iosevka-julsh.slopes.upright]
 angle = 0
@@ -42,15 +42,12 @@ shape = "italic"
 menu = "italic"
 css = "italic"
 
-[buildPlans.iosevka-julsh.metric-override]
-leading = 1100
-
 [buildPlans.iosevka-julsh-mono]
 family = "Iosevka Julsh Mono"
 spacing = "normal"
 serifs = "sans"
-no-cv-ss = true
-no-ligation = true
+noCvSs = true
+noLigation = true
 
 [buildPlans.iosevka-julsh-mono.variants]
 inherits = "ss08"
@@ -59,10 +56,10 @@ inherits = "ss08"
 capital-q = "crossing"
 ampersand = "closed"
 at = "fourfold"
-zero = "slashed-oval"
-two = "straight-neck"
+zero = "oval-slashed"
+two = "straight-neck-serifless"
 three = "two-arcs"
-five = "oblique-upper-left-bar"
+five = "oblique-flat-serifless"
 six = "open-contour"
 eight = "crossing"
 nine = "open-contour"
@@ -72,10 +69,10 @@ e = "rounded"
 i = "tailed-serifed"
 j = "serifed"
 l = "tailed-serifed"
-u = "tailed"
-v = "curly"
-w = "straight"
-y = "curly-turn"
+u = "tailed-serifless"
+v = "curly-serifless"
+w = "straight-serifless"
+y = "curly-turn-serifless"
 
 [buildPlans.iosevka-julsh-mono.slopes.upright]
 angle = 0
@@ -88,6 +85,3 @@ angle = 9.4
 shape = "italic"
 menu = "italic"
 css = "italic"
-
-[buildPlans.iosevka-julsh-mono.metric-override]
-leading = 1100
