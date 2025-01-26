@@ -33,8 +33,8 @@ except ImportError:
 ###############################################################################
 
 IOSEVKA_REPO_URL: str = "https://github.com/be5invis/Iosevka.git"
-IOSEVKA_REPO_BRANCH: str = "v17.0.1"
-IOSEVKA_REPO_COMMIT: str = "398451d7c541ae2c83425d240b4d7bc5e70e5a07"
+IOSEVKA_REPO_BRANCH: str = "v32.4.0"
+IOSEVKA_REPO_COMMIT: str = "a5d26cb87836c7245dcae2c741663017245cdd18"
 
 OUTPUT_DIR: str = "/app/output"
 WORKDIR: str = "/app/workdir"
@@ -348,7 +348,7 @@ def build_one_plan(plan_name: str) -> None:
     """
     print(f"\n--- Building plan '{plan_name}' ---")
 
-    plan_dist_dir = os.path.join(REPO_DIR, "dist", plan_name, "ttf")
+    plan_dist_dir = os.path.join(REPO_DIR, "dist", plan_name, "TTF")
     plan_out_dir = os.path.join(OUTPUT_DIR, plan_name)
     webfont_out_dir = os.path.join(OUTPUT_DIR, plan_name + "-webfonts")
 
