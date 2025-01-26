@@ -3,7 +3,7 @@ family = "Iosevka Julsh"
 spacing = "quasi-proportional"
 serifs = "sans"
 noCvSs = true
-noLigation = true
+noLigation = false
 buildTextureFeature = true
 
 [buildPlans.iosevka-julsh.variants]
@@ -48,7 +48,7 @@ family = "Iosevka Julsh Mono"
 spacing = "normal"
 serifs = "sans"
 noCvSs = true
-noLigation = true
+noLigation = false
 buildTextureFeature = true
 
 [buildPlans.iosevka-julsh-mono.variants]
