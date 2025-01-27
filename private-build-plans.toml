@@ -35,16 +35,6 @@ shape = 500
 menu = 5
 css = "normal"
 
-[buildPlans.IosevkaJulsh.widths.Extended]
-shape = 600
-menu = 7
-css = "expanded"
-
-[buildPlans.IosevkaJulsh.widths.SemiCondensed]
-shape = 456
-menu = 4
-css = "semi-condensed"
-
 [buildPlans.IosevkaJulsh.slopes.Upright]
 angle = 0
 shape = "upright"
@@ -93,16 +83,6 @@ dollar = "through"
 shape = 500
 menu = 5
 css = "normal"
-
-[buildPlans.IosevkaJulshMono.widths.Extended]
-shape = 600
-menu = 7
-css = "expanded"
-
-[buildPlans.IosevkaJulshMono.widths.SemiCondensed]
-shape = 456
-menu = 4
-css = "semi-condensed"
 
 [buildPlans.IosevkaJulshMono.slopes.Upright]
 angle = 0
