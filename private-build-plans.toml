@@ -4,6 +4,7 @@ spacing = "quasi-proportional"
 serifs = "sans"
 noCvSs = true
 exportGlyphNames = false
+buildTextureFeature = true
 
 [buildPlans.IosevkaJulsh.variants]
 inherits = "ss08"
@@ -53,6 +54,7 @@ spacing = "normal"
 serifs = "sans"
 noCvSs = true
 exportGlyphNames = false
+buildTextureFeature = true
 
 [buildPlans.IosevkaJulshMono.variants]
 inherits = "ss08"
