@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iosevka Julsh Font Demo</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --accent-color: #2563eb;
+        }
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+        }
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 80ch;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        .font-card {
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.05);
+        }
+        .font-name {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+        .sample-text {
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        .theme-toggle {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+        }
+        #font-filter {
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+@font-face {
+    font-family: 'IosevkaJulshMono-ExtraBold';
+    src: url('./fonts/IosevkaJulshMono-ExtraBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-Italic';
+    src: url('./fonts/IosevkaJulshMono-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-ExtraLightItalic';
+    src: url('./fonts/IosevkaJulshMono-ExtraLightItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-SemiBoldItalic';
+    src: url('./fonts/IosevkaJulshMono-SemiBoldItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-HeavyItalic';
+    src: url('./fonts/IosevkaJulshMono-HeavyItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-Thin';
+    src: url('./fonts/IosevkaJulshMono-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-BoldItalic';
+    src: url('./fonts/IosevkaJulshMono-BoldItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-LightItalic';
+    src: url('./fonts/IosevkaJulshMono-LightItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-Heavy';
+    src: url('./fonts/IosevkaJulshMono-Heavy.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-Medium';
+    src: url('./fonts/IosevkaJulshMono-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-Regular';
+    src: url('./fonts/IosevkaJulshMono-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-ThinItalic';
+    src: url('./fonts/IosevkaJulshMono-ThinItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-Light';
+    src: url('./fonts/IosevkaJulshMono-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-Bold';
+    src: url('./fonts/IosevkaJulshMono-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-SemiBold';
+    src: url('./fonts/IosevkaJulshMono-SemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-ExtraLight';
+    src: url('./fonts/IosevkaJulshMono-ExtraLight.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-MediumItalic';
+    src: url('./fonts/IosevkaJulshMono-MediumItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulshMono-ExtraBoldItalic';
+    src: url('./fonts/IosevkaJulshMono-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-ThinItalic';
+    src: url('./fonts/IosevkaJulsh-ThinItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-ExtraBoldItalic';
+    src: url('./fonts/IosevkaJulsh-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-ExtraLight';
+    src: url('./fonts/IosevkaJulsh-ExtraLight.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-Heavy';
+    src: url('./fonts/IosevkaJulsh-Heavy.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-Italic';
+    src: url('./fonts/IosevkaJulsh-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-SemiBoldItalic';
+    src: url('./fonts/IosevkaJulsh-SemiBoldItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-LightItalic';
+    src: url('./fonts/IosevkaJulsh-LightItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-SemiBold';
+    src: url('./fonts/IosevkaJulsh-SemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-BoldItalic';
+    src: url('./fonts/IosevkaJulsh-BoldItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-Light';
+    src: url('./fonts/IosevkaJulsh-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-ExtraLightItalic';
+    src: url('./fonts/IosevkaJulsh-ExtraLightItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-HeavyItalic';
+    src: url('./fonts/IosevkaJulsh-HeavyItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-Bold';
+    src: url('./fonts/IosevkaJulsh-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-ExtraBold';
+    src: url('./fonts/IosevkaJulsh-ExtraBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-MediumItalic';
+    src: url('./fonts/IosevkaJulsh-MediumItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-Regular';
+    src: url('./fonts/IosevkaJulsh-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-Medium';
+    src: url('./fonts/IosevkaJulsh-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'IosevkaJulsh-Thin';
+    src: url('./fonts/IosevkaJulsh-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Iosevka Julsh Demo</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+        </div>
+
+        <input type="text" id="font-filter" placeholder="Search fonts...">
+
+        <div class="font-grid">
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-ExtraBold</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-ExtraBold"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-Italic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-Italic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-ExtraLightItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-ExtraLightItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-SemiBoldItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-SemiBoldItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-HeavyItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-HeavyItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-Thin</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-Thin"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-BoldItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-BoldItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-LightItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-LightItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-Heavy</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-Heavy"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-Medium</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-Medium"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-Regular</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-Regular"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-ThinItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-ThinItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-Light</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-Light"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-Bold</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-Bold"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-SemiBold</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-SemiBold"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-ExtraLight</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-ExtraLight"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-MediumItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-MediumItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulshMono-ExtraBoldItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulshMono-ExtraBoldItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-ThinItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-ThinItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-ExtraBoldItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-ExtraBoldItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-ExtraLight</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-ExtraLight"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-Heavy</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-Heavy"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-Italic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-Italic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-SemiBoldItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-SemiBoldItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-LightItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-LightItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-SemiBold</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-SemiBold"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-BoldItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-BoldItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-Light</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-Light"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-ExtraLightItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-ExtraLightItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-HeavyItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-HeavyItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-Bold</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-Bold"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-ExtraBold</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-ExtraBold"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-MediumItalic</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-MediumItalic"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-Regular</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-Regular"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-Medium</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-Medium"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+<div class='font-card'>
+            <div class='font-name'>IosevkaJulsh-Thin</div>
+            <div class='sample-text' style='font-family: "IosevkaJulsh-Thin"'>
+                The quick brown fox jumps over the lazy dog<br>
+                0123456789!@#$%^&*()<br>
+                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+                abcdefghijklmnopqrstuvwxyz
+            </div>
+        </div>
+        </div>
+        <footer style="margin-top: 3rem; text-align: center; opacity: 0.8;">
+            <small>Generated at 2025-01-27 21:37:01 UTC from commit <a href="https://github.com/jul-sh/iosevka-julsh/commit/45792bf34be59b99acff48336faf0a904aafa548">45792bf34be59b99acff48336faf0a904aafa548</a></small>
+        </footer>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.dataset.theme =
+                document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+        }
+
+        document.getElementById('font-filter').addEventListener('input', (e) => {
+            const search = e.target.value.toLowerCase();
+            Array.from(document.querySelectorAll('.font-card')).forEach(card => {
+                const name = card.querySelector('.font-name').textContent.toLowerCase();
+                card.style.display = name.includes(search) ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
