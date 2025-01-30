@@ -1,13 +1,12 @@
-name: Build and Release Fonts
+name: Build and Upload Fonts
 
 on:
   push:
     branches:
       - main
+    paths:
+      - sources/**
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   build-fonts:
@@ -25,40 +24,22 @@ jobs:
       # Build Docker container and run the build.sh script
       - name: Build fonts using Docker
         run: |
-          make
+          cd sources && sh build.sh
 
-      # Archive the output fonts
-      - name: Archive output fonts
+      # Create fonts directory if it doesn't exist
+      - name: Create fonts directory
+        run: mkdir -p fonts
+
+      # Move built fonts to fonts directory
+      - name: Move fonts to fonts directory
         run: |
-          mkdir -p output
-          find output -maxdepth 1 -type d -print0 | while IFS= read -r -d $'\0' dir; do
-            if [ "$dir" != "output" ]; then
-              zip -r "output/$(basename "$dir").zip" "$dir"
-            fi
-          done
+          cd sources
+          mkdir -p ../fonts/ttf
+          find output -type f -name "*.ttf" -exec cp {} ../fonts/ttf/ \;
 
-      # Create a tag for the release
-      - name: Create tag
-        id: create_tag
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          TAG_NAME="release-$(date +'%Y%m%d-%H%M%S')"
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
-          git tag $TAG_NAME
-          git push origin $TAG_NAME
-
-      # Create a release and upload fonts
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
+      # Upload fonts as artifacts
+      - name: Upload Fonts
+        uses: actions/upload-artifact@v2
         with:
-          files: output/*.zip
-          name: Font Build - ${{ github.sha }}
-          body: |
-            Fonts generated from commit ${{ github.sha }}.
-            Download the .ttf files from the assets below.
-          draft: false
-          prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ env.TAG_NAME }}
+          name: Iosevka_Julsh_Fonts
+          path: fonts/
