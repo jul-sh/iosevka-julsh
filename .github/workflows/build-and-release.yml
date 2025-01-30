@@ -6,38 +6,70 @@ on:
       - main
     paths:
       - sources/**
+  pull_request:
+    branches:
+      - main
+    paths:
+      - sources/**
   workflow_dispatch:
 
 jobs:
   build-fonts:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
 
     steps:
-      # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Set up Docker
+      - name: Set up Python v${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Python dependency cache lookup
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('sources/scripts/requirements.txt') }}
+
+      - name: Install Python dependencies
+        uses: py-actions/py-dependency-install@v2
+        with:
+          update-wheel: "true"
+          update-setuptools: "true"
+
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      # Build Docker container and run the build.sh script
       - name: Build fonts using Docker
         run: |
           cd sources && sh build.sh
 
-      # Create fonts directory if it doesn't exist
       - name: Create fonts directory
         run: mkdir -p fonts
 
-      # Move built fonts to fonts directory
       - name: Move fonts to fonts directory
         run: |
           cd sources
           mkdir -p ../fonts/ttf
           find output -type f -name "*.ttf" -exec cp {} ../fonts/ttf/ \;
 
-      # Upload fonts as artifacts
+      - name: Install ttfautohint
+        run: |
+          sudo apt-get update
+          sudo apt-get install ttfautohint
+
+      - name: Run Fontbakery checks
+        uses: f-actions/font-bakery@v1
+        with:
+          version: "latest"
+          subcmd: "check-googlefonts"
+          args: "-C --succinct --loglevel WARN --ghmarkdown fonts/report.md"
+          path: "fonts/ttf/*.ttf"
+
       - name: Upload Fonts
         uses: actions/upload-artifact@v2
         with:
