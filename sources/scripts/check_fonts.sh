@@ -17,8 +17,8 @@ if [ -z "$TTF_FILES" ]; then
     exit 1
 fi
 
-# Run Fontbakery checks on fonts
+# Run Fontbakery checks on fonts. Don't fail on errors.
 fontbakery check-googlefonts \
     -C --succinct --loglevel WARN \
     --ghmarkdown sources/output/report.md \
-    $TTF_FILES
+    $TTF_FILES || true

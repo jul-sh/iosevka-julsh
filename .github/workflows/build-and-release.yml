@@ -41,9 +41,9 @@ jobs:
       - name: Cache Nix store
         uses: DeterminateSystems/magic-nix-cache-action@v2
 
-      - name: Build fonts using Docker
+      - name: Build fonts using Nix develop
         run: |
-          sh sources/build.sh
+          nix develop ./sources#default -c ./sources/build.sh
 
       - name: Upload Fonts
         uses: actions/upload-artifact@v4
@@ -56,10 +56,9 @@ jobs:
           overwrite: true
           include-hidden-files: false
 
-      - name: Check fonts using Nix
+      - name: Check fonts using Nix develop
         run: |
-          ./sources/scripts/check_fonts.sh
-          cat sources/output/report.md
+          nix develop ./sources#default -c ./sources/scripts/check_fonts.sh
 
       - name: Upload Font Check Report
         uses: actions/upload-artifact@v4
@@ -73,9 +72,9 @@ jobs:
         run: |
           mkdir -p fonts/ttf
           find sources/output -type f -name "*.ttf" -exec cp {} fonts/ttf/ \;
+          cp sources/output/report.md fonts/
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add fonts/
-          git add sources/output/report.md
           git commit -m "Update font files and QA report [skip ci]"
           git push

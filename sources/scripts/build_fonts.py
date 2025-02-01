@@ -93,7 +93,7 @@ def prep_environment() -> None:
         else:
             print("[prep_environment] Cloning Iosevka repository...")
             run_cmd(
-                f"git clone --depth 1 --branch {IOSEVKA_REPO_BRANCH} {IOSEVKA_REPO_URL} iosevka-repo"
+                f"git clone --depth 1 --branch {IOSEVKA_REPO_BRANCH} {IOSEVKA_REPO_URL} {REPO_DIR}"
             )
             # List contents of cloned repo to verify
             print("[prep_environment] Listing cloned repository contents...")
@@ -389,6 +389,8 @@ def main() -> None:
     Prepares environment, gathers build plans, and builds each plan in turn.
     """
     print(f"[main] Working directory: {os.getcwd()}")
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(WORKDIR, exist_ok=True)
     try:
         prep_environment()
 
