@@ -33,26 +33,40 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and check fonts using Docker
+      - name: Build fonts using Docker
         run: |
           cd sources && sh build.sh
+          mkdir -p ../fonts/ttf
+          find sources/output -type f -name "*.ttf" -exec cp {} ../fonts/ttf/ \;
 
       - name: Upload Fonts
         uses: actions/upload-artifact@v4
         with:
           name: Iosevka_Julsh_Fonts
-          path: sources/fonts/
+          path: sources/output/
           if-no-files-found: error
           retention-days: 90
           compression-level: 0
           overwrite: true
           include-hidden-files: false
 
-      - name: Commit fonts
+      - name: Check fonts using Docker
+        run: |
+          cd sources && scripts/docker_run.sh "scripts/check_fonts.sh"
+
+      - name: Upload Font Check Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: FontBakery_Report
+          path: sources/output/report.md
+          if-no-files-found: error
+
+      - name: Commit changes
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add fonts/
-          git commit -m "Update font files [skip ci]"
+          git add sources/output/report.md
+          git commit -m "Update font files and QA report [skip ci]"
           git push
