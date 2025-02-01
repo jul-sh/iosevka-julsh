@@ -36,10 +36,10 @@ IOSEVKA_REPO_URL: str = "https://github.com/be5invis/Iosevka.git"
 IOSEVKA_REPO_BRANCH: str = "v32.4.0"
 IOSEVKA_REPO_COMMIT: str = "a5d26cb87836c7245dcae2c741663017245cdd18"
 
-OUTPUT_DIR: str = "/app/output"
-WORKDIR: str = "/app/workdir"
+OUTPUT_DIR: str = "/git_repo/sources/output"
+WORKDIR: str = "/git_repo/sources/workdir"
 REPO_DIR: str = os.path.join(WORKDIR, "iosevka-repo")
-PRIVATE_TOML: str = "/app/private-build-plans.toml"
+PRIVATE_TOML: str = "/git_repo/sources/private-build-plans.toml"
 
 # Whitespace Adjustment Config
 SPACE_WIDTH_REDUCTION: float = 0.24 # %

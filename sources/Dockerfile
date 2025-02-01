@@ -19,7 +19,7 @@ RUN pip3 --version
 RUN pip3 install --no-cache-dir "fontbakery[googlefonts]" --break-system-packages
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /git_repo
 
 # Default command to keep the container ready for action
 CMD ["bash"]

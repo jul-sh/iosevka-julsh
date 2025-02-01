@@ -13,11 +13,7 @@ run_in_docker() {
 
     # Set common Docker run options
     DOCKER_RUN_OPTIONS="--rm \
-        -v $(git rev-parse --show-toplevel)/sources/scripts:/app/scripts \
-        -v $(git rev-parse --show-toplevel)/sources/workdir:/app/workdir \
-        -v $(git rev-parse --show-toplevel)/sources/output:/app/output \
-        -v $(git rev-parse --show-toplevel)/fonts:/app/fonts \
-        -v $(git rev-parse --show-toplevel)/sources/private-build-plans.toml:/app/private-build-plans.toml"
+        -v $(git rev-parse --show-toplevel):/git_repo \
 
     if [ "$interactive" = true ] && [ -z "$CI" ]; then
         docker run -it $DOCKER_RUN_OPTIONS fontforge-iosevka bash -c "$cmd"
