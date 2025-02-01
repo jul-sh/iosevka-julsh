@@ -1,14 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash ../shell.nix
+
 set -e
 
+cd "$(git rev-parse --show-toplevel)"
+
 # Ensure output directory exists and contains TTF files
-if [ ! -d "/git_repo/fonts" ] || [ -z "$(ls -A /git_repo/fonts/*.ttf 2>/dev/null)" ]; then
-    echo "ERROR: No TTF files found in /git_repo/sources/output directory"
+if [ ! -d "sources/output" ]; then
+    echo "ERROR: sources/output directory does not exist"
     exit 1
 fi
 
-# Run Fontbakery checks on fonts in place without copying
+# Find all TTF files recursively
+TTF_FILES=$(find sources/output -type f -name "*.ttf")
+if [ -z "$TTF_FILES" ]; then
+    echo "ERROR: No TTF files found in sources/output directory or subdirectories"
+    exit 1
+fi
+
+# Run Fontbakery checks on fonts
 fontbakery check-googlefonts \
     -C --succinct --loglevel WARN \
-    --ghmarkdown /git_repo/fonts/report.md \
-    /git_repo/fonts/ttf/*.ttf
+    --ghmarkdown sources/output/report.md \
+    $TTF_FILES

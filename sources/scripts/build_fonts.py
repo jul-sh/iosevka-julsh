@@ -36,10 +36,10 @@ IOSEVKA_REPO_URL: str = "https://github.com/be5invis/Iosevka.git"
 IOSEVKA_REPO_BRANCH: str = "v32.4.0"
 IOSEVKA_REPO_COMMIT: str = "a5d26cb87836c7245dcae2c741663017245cdd18"
 
-OUTPUT_DIR: str = "/git_repo/sources/output"
-WORKDIR: str = "/git_repo/sources/workdir"
+OUTPUT_DIR: str = "sources/output"
+WORKDIR: str = "sources/workdir"
 REPO_DIR: str = os.path.join(WORKDIR, "iosevka-repo")
-PRIVATE_TOML: str = "/git_repo/sources/private-build-plans.toml"
+PRIVATE_TOML: str = "sources/private-build-plans.toml"
 
 # Whitespace Adjustment Config
 SPACE_WIDTH_REDUCTION: float = 0.24 # %
@@ -83,7 +83,6 @@ def prep_environment() -> None:
     """
     try:
         os.makedirs(WORKDIR, exist_ok=True)
-        os.chdir(WORKDIR)
 
         # Clone or update the repository
         if os.path.isdir(REPO_DIR):
@@ -96,6 +95,8 @@ def prep_environment() -> None:
             run_cmd(
                 f"git clone --depth 1 --branch {IOSEVKA_REPO_BRANCH} {IOSEVKA_REPO_URL} iosevka-repo"
             )
+            # List contents of cloned repo to verify
+            print("[prep_environment] Listing cloned repository contents...")
             run_cmd(f"git reset --hard {IOSEVKA_REPO_COMMIT}", cwd=REPO_DIR)
 
         # Copy private build plans
@@ -106,8 +107,7 @@ def prep_environment() -> None:
 
         # Install npm dependencies
         print("[prep_environment] Installing npm dependencies...")
-        os.chdir(REPO_DIR)
-        run_cmd("npm ci")
+        run_cmd("npm ci", cwd=REPO_DIR)
 
         # Clean the output directory
         if os.path.isdir(OUTPUT_DIR):
@@ -388,6 +388,7 @@ def main() -> None:
 
     Prepares environment, gathers build plans, and builds each plan in turn.
     """
+    print(f"[main] Working directory: {os.getcwd()}")
     try:
         prep_environment()
 
