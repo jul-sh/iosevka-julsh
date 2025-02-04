@@ -75,5 +75,5 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add fonts/
-          git commit -m "[GitHub Action] Update font files and QA report"
+          git commit -m "[GitHub Action] Update font files and QA report (built from $(git rev-parse --short HEAD))"
           git push
