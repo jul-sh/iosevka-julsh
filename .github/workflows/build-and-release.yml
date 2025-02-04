@@ -45,7 +45,7 @@ jobs:
         run: |
           nix develop ./sources#default -c ./sources/build.sh
           mkdir -p fonts/ttf
-          find sources/output -type f -name "*.ttf" -exec cp {} fonts/ttf/ \;
+          cp -r sources/output/* fonts
 
       - name: Upload Fonts
         uses: actions/upload-artifact@v4
@@ -60,13 +60,20 @@ jobs:
 
       - name: Check fonts using Nix develop
         run: |
-          nix develop ./sources#default -c ./sources/scripts/check_fonts.sh fonts
+          for dir in fonts/*/; do
+            if [ -d "$dir" ]; then
+              plan_name=$(basename "$dir")
+              echo "Checking fonts in $plan_name..."
+              nix develop ./sources#default -c ./sources/scripts/check_fonts.sh "${dir}/ttf"
+              mv "${dir}/ttf/report.md" "fonts/${plan_name}_report.md"
+            fi
+          done
 
-      - name: Upload Font Check Report
+      - name: Upload Font Check Reports
         uses: actions/upload-artifact@v4
         with:
-          name: FontBakery_Report
-          path: fonts/report.md
+          name: FontBakery_Reports
+          path: fonts/*_report.md
           if-no-files-found: error
 
       - name: Commit changes

@@ -294,25 +294,26 @@ def adjust_whitespace(input_folder: str) -> None:
 # Webfont Generation
 ###############################################################################
 
-def generate_webfonts(input_folder: str, webfont_output_folder: str) -> None:
+def generate_webfonts(input_folder: str, output_folder: str) -> None:
     """Generates WOFF2 webfonts from TTF files.
 
     For each TTF in input_folder:
       - Subsets to Basic Latin (U+0000..U+007F)
-      - Generates .woff2 in webfont_output_folder
+      - Generates .woff2 in output_folder/woff2
 
     Args:
         input_folder: Directory containing source TTF files.
-        webfont_output_folder: Directory to output WOFF2 files.
+        output_folder: Top-level directory for the font family.
     """
-    os.makedirs(webfont_output_folder, exist_ok=True)
+    woff2_output_folder = os.path.join(output_folder, "woff2")
+    os.makedirs(woff2_output_folder, exist_ok=True)
 
     for file_name in os.listdir(input_folder):
         if not file_name.endswith(".ttf"):
             continue
 
         input_path = os.path.join(input_folder, file_name)
-        woff2_path = os.path.join(webfont_output_folder, file_name.replace(".ttf", ".woff2"))
+        woff2_path = os.path.join(woff2_output_folder, file_name.replace(".ttf", ".woff2"))
 
         print(f"[webfont] Processing {file_name}...")
         font = fontforge.open(input_path)
@@ -339,9 +340,9 @@ def build_one_plan(plan_name: str) -> None:
 
     Steps:
       1. npm run build -- ttf::<plan_name>
-      2. Copy TTFs to OUTPUT_DIR/<plan_name>
+      2. Copy TTFs to OUTPUT_DIR/<plan_name>/ttf
       3. Adjust whitespace if plan_name not 'mono'
-      4. Generate WOFF2 webfonts
+      4. Generate WOFF2 webfonts to OUTPUT_DIR/<plan_name>/woff2
 
     Args:
         plan_name: Name of the build plan to process.
@@ -350,10 +351,9 @@ def build_one_plan(plan_name: str) -> None:
 
     plan_dist_dir = os.path.join(REPO_DIR, "dist", plan_name, "TTF")
     plan_out_dir = os.path.join(OUTPUT_DIR, plan_name)
-    webfont_out_dir = os.path.join(OUTPUT_DIR, plan_name + "-webfonts")
+    ttf_out_dir = os.path.join(plan_out_dir, "ttf")
 
-    os.makedirs(plan_out_dir, exist_ok=True)
-    os.makedirs(webfont_out_dir, exist_ok=True)
+    os.makedirs(ttf_out_dir, exist_ok=True)
 
     # 1) Build TTF
     print(f"[build_one_plan] Building TTF for '{plan_name}'...")
@@ -366,18 +366,18 @@ def build_one_plan(plan_name: str) -> None:
 
     for filename in os.listdir(plan_dist_dir):
         if filename.endswith(".ttf"):
-            shutil.copy2(os.path.join(plan_dist_dir, filename), plan_out_dir)
+            shutil.copy2(os.path.join(plan_dist_dir, filename), ttf_out_dir)
 
     # 3) Adjust whitespace if not mono
     if "mono" not in plan_name.lower():
         print(f"[build_one_plan] Adjusting whitespace in '{plan_name}'...")
-        adjust_whitespace(plan_out_dir)
+        adjust_whitespace(ttf_out_dir)
     else:
         print(f"[build_one_plan] Skipping whitespace adjustment (mono plan).")
 
     # 4) Generate webfonts
     print(f"[build_one_plan] Generating webfonts for '{plan_name}'...")
-    generate_webfonts(plan_out_dir, webfont_out_dir)
+    generate_webfonts(ttf_out_dir, plan_out_dir)
 
 ###############################################################################
 # Main
