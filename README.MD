@@ -1,9 +1,9 @@
-# Iosevka Julsh Font
+# Iosevka Charon Font
 
-This repository contains custom builds of the Iosevka font, tailored for personal use. It includes two variants:
+This repository contains custom builds of the Iosevka font. It includes two variants:
 
-1. Iosevka Julsh: A quasi-proportional sans-serif font
-2. Iosevka Julsh Mono: A monospaced variant for coding.
+1. Iosevka Charon: A quasi-proportional sans-serif font
+2. Iosevka Charon Mono: A monospaced variant for coding.
 
 The fonts are built and released automatically for each commit.
 
