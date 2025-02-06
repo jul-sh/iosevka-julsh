@@ -4,6 +4,9 @@ set -e
 
 cd "$(git rev-parse --show-toplevel)"
 
+# Source the Nix environment
+source sources/scripts/setup_shell.sh
+
 # Set default font directory if not provided
 FONT_DIR=${1:-"sources/output"}
 
