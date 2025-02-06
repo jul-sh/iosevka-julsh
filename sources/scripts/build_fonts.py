@@ -154,48 +154,6 @@ def get_build_plans() -> List[str]:
         print(f"ERROR parsing build plans: {str(e)}")
         raise
 
-
-###############################################################################
-# Webfont Generation
-###############################################################################
-
-def generate_webfonts(input_folder: str, output_folder: str) -> None:
-    """Generates WOFF2 webfonts from TTF files.
-
-    For each TTF in input_folder:
-      - Subsets to Basic Latin (U+0000..U+007F)
-      - Generates .woff2 in output_folder/woff2
-
-    Args:
-        input_folder: Directory containing source TTF files.
-        output_folder: Top-level directory for the font family.
-    """
-    woff2_output_folder = os.path.join(output_folder, "woff2")
-    os.makedirs(woff2_output_folder, exist_ok=True)
-
-    for file_name in os.listdir(input_folder):
-        if not file_name.endswith(".ttf"):
-            continue
-
-        input_path = os.path.join(input_folder, file_name)
-        woff2_path = os.path.join(woff2_output_folder, file_name.replace(".ttf", ".woff2"))
-
-        print(f"[webfont] Processing {file_name}...")
-        font = fontforge.open(input_path)
-
-        # Keep only U+0000..U+007F
-        font.selection.none()
-        font.selection.select(("ranges", None), 0x0000, 0x007F)
-        font.selection.invert()
-        font.clear()
-
-        font.generate(woff2_path, flags=("opentype",))
-        font.close()
-
-        print(f"[webfont] Saved WOFF2 webfont: {woff2_path}")
-
-    print("[webfont] Processing complete. All webfonts have been generated.")
-
 ###############################################################################
 # Single Plan Build
 ###############################################################################
@@ -232,9 +190,6 @@ def build_one_plan(plan_name: str) -> None:
         if filename.endswith(".ttf"):
             shutil.copy2(os.path.join(plan_dist_dir, filename), ttf_out_dir)
 
-    # 3) Generate webfonts
-    print(f"[build_one_plan] Generating webfonts for '{plan_name}'...")
-    generate_webfonts(ttf_out_dir, plan_out_dir)
 
 ###############################################################################
 # Main
