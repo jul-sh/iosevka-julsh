@@ -7,13 +7,9 @@
 # To download and install Nix, visit:
 #   https://nixos.org/download.html
 # and follow the installation instructions listed there.
-#
-# Once installed, you can run this script using Nix by executing:
-#   nix develop --experimental-features 'nix-command flakes' ./sources#default -c ./sources/build.sh
 
 set -e
 
 cd "$(git rev-parse --show-toplevel)"
 
-# Run font building
-python3 sources/scripts/build_fonts.py
+nix develop --experimental-features 'nix-command flakes' ./sources#default -c python3 sources/scripts/build_fonts.py
