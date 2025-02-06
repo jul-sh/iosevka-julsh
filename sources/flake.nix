@@ -19,6 +19,7 @@
             nodejs
             python3
             python3Packages.fontbakery
+            python3Packages.fonttools
           ];
 
           shellHook = ''

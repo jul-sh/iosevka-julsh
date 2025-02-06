@@ -23,8 +23,13 @@ if [ -z "$TTF_FILES" ]; then
     exit 1
 fi
 
-# Run Fontbakery checks on fonts. Don't fail on errors.
+# Run Fontbakery checks on fonts, disabling the mono-bad-panose check.
+
+# Disable check/monospace because it incorrectly flags our quasi-proportional font as monospaced.
+# This is due to a majority of glyphs sharing a common width, even though the font is not intended to be monospaced.
+# See https://github.com/fonttools/fontbakery/blob/ffe83a2824631ddbabdbf69c47b8128647de30d1/Lib/fontbakery/checks/conditions.py#L50
 fontbakery check-googlefonts \
-    -C --succinct --loglevel WARN \
+    -C --succinct --loglevel FAIL \
+    --exclude-checkid check/monospace \
     --ghmarkdown "$FONT_DIR/report.md" \
     $TTF_FILES || true
