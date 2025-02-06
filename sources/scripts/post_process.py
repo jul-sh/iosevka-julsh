@@ -6,9 +6,14 @@ Post-process a TTF to fix:
 3) Match head.version and name version string.
 4) Drop hinting to avoid OTS "Bad glyph flag" errors.
 5) Set up NameID 13 and 14 for an OFL font.
+6) Fix invalid glyph flags in glyf table.
+7) Fix OS/2 usWinAscent value.
+8) Fix OS/2 sTypoAscender and hhea ascent values.
 """
 
+import os
 import sys
+import subprocess
 from fontTools import subset
 from fontTools.ttLib import TTFont
 from fontbakery.constants import NameID
@@ -22,6 +27,22 @@ OFL_LICENSE_INFO_URL = "https://openfontlicense.org"
 # Example version you want for both head.fontRevision and nameID=5
 FONT_VERSION_STRING = "Version 32.5.0"
 FONT_REVISION_FLOAT = 32.5  # head.fontRevision is a 16.16 fixed-point float
+
+def parse_nam_file(file_path):
+    """Parse a .nam file and return list of codepoints."""
+    codepoints = []
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        for line in file:
+            line = line.strip()
+            if line and not line.startswith("#"):  # Ignore empty lines and comments
+                try:
+                    code_point = int(line.split()[0], 16)  # Get hex value before comment
+                    codepoints.append(code_point)
+                except ValueError:
+                    print(f"Skipping invalid line: {line}")
+
+    return codepoints
 
 def set_license_description(ttFont, license_text):
     """Ensure NameID 13 (LICENSE DESCRIPTION) matches the provided text."""
@@ -53,7 +74,7 @@ def set_license_info_url(ttFont, license_url):
         # Mac
         name_table.setName(license_url, NameID.LICENSE_INFO_URL, 1, 0, 0)
 
-def fix_nbsp_glyph(ttFont):
+def reuse_space_for_non_breaking_space(ttFont):
     """
     Reuse the same glyph for U+00A0 (no-break space) as U+0020 (space),
     if missing.
@@ -100,10 +121,15 @@ def subset_basic_latin_plus_nbsp(input_path, output_path):
     2) Reuse space glyph for U+00A0.
     3) Drop hinting to avoid OTS "Bad glyph flag" errors.
     4) Fix NameID 13, 14, and version mismatch.
+    5) Fix invalid glyph flags in glyf table.
     """
-    # Basic Latin range plus U+00A0:
-    codepoints = list(range(0x0020, 0x007F))
-    codepoints.append(0x00A0)
+
+    # Get git repo root using git rev-parse
+    repo_root = subprocess.check_output(['git', 'rev-parse', '--show-toplevel'], text=True).strip()
+    nam_path = os.path.join(repo_root, "sources", "GF_Latin_Core.nam")
+
+    # Parse codepoints from nam file
+    codepoints = parse_nam_file(nam_path)
 
     # Set up subset options
     options = subset.Options()
@@ -135,7 +161,32 @@ def subset_basic_latin_plus_nbsp(input_path, output_path):
     set_license_info_url(font, OFL_LICENSE_INFO_URL)
 
     # 3) Reuse space glyph for U+00A0
-    fix_nbsp_glyph(font)
+    reuse_space_for_non_breaking_space(font)
+
+    # 4) Fix invalid glyph flags
+    glyf_table = font["glyf"]
+    for glyph_name in glyf_table.keys():
+        glyph = glyf_table[glyph_name]
+        # Check only simple glyphs (not composite)
+        if not glyph.isComposite():
+            # This call should still exist in older fontTools
+            coords, endPts, flags = glyph.getCoordinates(glyf_table)
+
+            # Clear bit 6 (0x40)
+            new_flags = [flag & ~0x40 for flag in flags]
+
+            # Manually re-assign the data back to the glyph
+            glyph.coordinates = coords
+            glyph.endPtsOfContours = endPts
+            glyph.flags = new_flags
+
+            # Optional: recalc bounding box
+            glyph.recalcBounds(glyf_table)
+
+    # 5) Fix OS/2 usWinAscent, sTypoAscender and hhea ascent values
+    font["OS/2"].usWinAscent = 985
+    font["OS/2"].sTypoAscender = 980
+    font["hhea"].ascent = 980
 
     # Save
     subset.save_font(font, output_path, options)
