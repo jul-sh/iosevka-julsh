@@ -171,7 +171,7 @@ def build_one_plan(plan_name: str) -> None:
 
     # 1) Build TTF
     print(f"[build_one_plan] Building TTF for '{plan_name}'...")
-    run_cmd(f"npm run build -- ttf::{plan_name}", cwd=REPO_DIR)
+    run_cmd(f"npm run build -- ttf-unhinted::{plan_name}", cwd=REPO_DIR)
 
     # 2) Copy TTFs
     if not os.path.isdir(plan_dist_dir):
